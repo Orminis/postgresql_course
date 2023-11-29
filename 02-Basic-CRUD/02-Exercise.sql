@@ -1,7 +1,10 @@
 -- 01
-SELECT *
-FROM cities
-ORDER BY "id"
+SELECT 
+	*
+FROM 
+	cities
+ORDER BY 
+	"id"
 ;
 
 -- 02
@@ -10,7 +13,8 @@ SELECT
 	,area AS "Area (km2)" 
 FROM 
 	cities
-ORDER BY "id"
+ORDER BY 
+	"id"
 ;
 
 -- 03
@@ -29,7 +33,8 @@ SELECT
 	"id" AS "ID"
 	,CONCAT(first_name, ' ', last_name) AS "Full Name"
 	,job_title AS "Job Title"
-FROM employees
+FROM 
+	employees
 ORDER BY
 	first_name ASC
 LIMIT 50
@@ -44,7 +49,8 @@ FROM
 	employees
 ORDER BY
 	hire_date ASC
-OFFSET 9;
+OFFSET 9
+;
 
 
 -- 06
@@ -147,7 +153,9 @@ LIMIT 3
 ;
 
 -- 14
-INSERT INTO departments (department, manager_id)
+INSERT INTO 
+	departments 
+		(department, manager_id)
 VALUES 
 	('Finance', 3),
 	('Information Services', 42),
@@ -156,6 +164,7 @@ VALUES
 	('Facilities and Maintenance', 218),
 	('Shipping and Receiving', 85),
 	('Executive', 109)
+
 RETURNING *
 ;
 
@@ -174,28 +183,37 @@ SELECT
 	,e.job_title AS "Job Title" 
 	,e.department_id AS "Department ID"
 	,e.manager_id AS "Manager ID"
-FROM employees AS e
+FROM 
+	employees AS e
 ;
 
 -- 16
 SELECT *
-FROM projects
-ORDER BY "id"
-WHERE end_date is NULL;
+FROM 
+	projects
+ORDER BY 
+	"id"
+WHERE 
+	end_date is NULL;
 
 
-UPDATE projects
-SET end_date = start_date + INTERVAL '5 months'
-WHERE end_date is NULL
+UPDATE 
+	projects
+SET 
+	end_date = start_date + INTERVAL '5 months'
+WHERE 
+	end_date is NULL
 ;
 
 -- 17
-SELECT *
+SELECT 
+	*
 FROM 
 	employees
 WHERE 
 	hire_date >= '1998-01-01'
-	AND hire_date <= '2000-01-05'
+	AND 
+	hire_date <= '2000-01-05'
 ORDER BY 
 	hire_date ASC
 ;
