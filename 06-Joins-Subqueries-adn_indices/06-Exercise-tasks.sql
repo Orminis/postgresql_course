@@ -156,3 +156,66 @@ GROUP BY
 ORDER BY
 	"booking_count" DESC
 ;
+
+-- 11. Bulgaria's Peaks Higher than 2835 Meters 
+SELECT
+	mc.country_code
+	,m.mountain_range
+	,p.peak_name
+	,p.elevation
+FROM
+	mountains AS m
+JOIN 
+	mountains_countries AS mc
+ON
+	m.id = mc.mountain_id
+JOIN
+	peaks AS p
+ON
+	m.id = p.mountain_id
+WHERE
+	mc.country_code = 'BG'
+	AND
+	p.elevation > 2835
+ORDER BY
+	p.elevation DESC
+;
+
+-- 12. Count Mountain Ranges
+SELECT
+	mc.country_code
+	,COUNT(*) AS "mountain_range_count"
+FROM
+	mountains AS m
+JOIN 
+	mountains_countries AS mc
+ON
+	m.id = mc.mountain_id
+WHERE
+	mc.country_code in ('BG', 'RU', 'US')
+GROUP BY
+	mc.country_code
+ORDER BY 
+	"mountain_range_count" DESC
+;
+
+-- 13. Rivers in Africa
+SELECT
+	c.country_name
+	,r.river_name
+FROM
+	countries AS c
+LEFT JOIN
+	countries_rivers AS cr
+ON 
+	c.country_code = cr.country_code
+LEFT JOIN
+	rivers AS r
+on 
+	cr.river_id = r.id
+WHERE 
+	continent_code = 'AF'
+ORDER BY
+	c.country_name
+LIMIT(5)
+;
