@@ -73,7 +73,34 @@ $$
 LANGUAGE plpgsql
 ;
 
--- Examples how to use it
+-- How to declare Input and output variables into function parenthesis.
+
+-- Using additional variable, for example named status, to be used to return additional information depending of the final result of the `main` variable.
+
+CREATE OR REPLACE FUNCTION fn_get_city_id(
+	IN city_name VARCHAR
+	,OUT city_id INT
+	,OUT status INT
+	)
+AS
+$$
+	DECLARE
+		temp_id int
+	BEGIN
+		SELECT id FROM cities
+		WHERE name = city_name
+		INTO temp_id;
+		IF temp_id IS NULL THEN
+			SELECT NULL, 100 INTO city_id, status;
+		ELSE 
+			SELECT temp_id, 0 INTO city_id, status, 
+		END IF;
+	END
+$$
+LANGUAGE plpgsql
+;
+
+-- Examples how to use the function 
 
 INSERT INTO 
 	persons(first_name, last_name, city_id)
@@ -82,3 +109,5 @@ VALUES
 ;
 
 SELECT fn_get_city_id('Sofia');
+
+
