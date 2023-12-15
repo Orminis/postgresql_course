@@ -111,20 +111,3 @@ VALUES
 SELECT fn_get_city_id('Sofia');
 
 
--- STORED PROCEDURES
--- SP is used to manipulate tables/data in DBs
--- SP can call functions but functions can't call SPs.
-CREATE PROCEDURE sp_add_person(first_name VARCHAR, last_name VARCHAR, city_name VARCHAR)
-AS
-$$
-	BEGIN
-		INSERT INTO persons(first_name, last_name, city_id)
-		VALUE (first_name, last_name, fn_get_city_id(city_name))
-	END;
-$$
-LANGUAGE plpgsql
-;
-
--- Usage of stored procedures
-
-CALL sp_add_person('Ivan', 'Nachev', 'Varna')
