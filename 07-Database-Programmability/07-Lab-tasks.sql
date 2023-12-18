@@ -78,3 +78,75 @@ LANGUAGE plpgsql
 CALL sp_decrease_salaries('Finance');
 
 CALL sp_increase_salaries('Finance');
+
+-- 03.Employees Promotion by ID
+CREATE PROCEDURE sp_increase_salary_by_id(id INT)
+AS 
+$$
+BEGIN
+	IF (
+		SELECT 
+			salary
+		FROM
+			employees
+		WHERE 
+			employee_id = id
+		) IS NULL THEN
+		RETURN;
+	ELSE
+		UPDATE
+			employees
+		SET
+			salary = salary + (0.05 * salary)
+		WHERE
+			id = employee_id;
+	END IF;
+	COMMIT;	
+END;	
+$$
+LANGUAGE plpgsql
+;
+
+-- 04.Triggered
+CREATE TABLE deleted_employees(
+	employee_id SERIAL PRIMARY KEY
+	, first_name VARCHAR(20)
+	, last_name VARCHAR(20)
+	, middle_name VARCHAR(20)
+	, job_title VARCHAR(50)
+	, deparment_id INT
+	, salary NUMERIC(19, 4)
+	)
+;
+
+CREATE OR REPLACE FUNCTION fn_backup_fired_employees()
+RETURNS TRIGGER AS
+$$
+BEGIN
+	INSERT INTO deleted_employees(
+		 first_name
+		, last_name
+		, middle_name
+		, job_title
+		, deparment_id
+		, salary
+	)
+	VALUES (
+		old.first_name
+		,old.last_name
+		,old.middle_name
+		,old.job_title
+		,old.department_id
+		,old.salary
+		);
+	RETURN new;
+END;
+$$
+
+LANGUAGE plpgsql
+;
+
+CREATE OR REPLACE TRIGGER backup_employees
+AFTER DELETE ON employees
+FOR EACH ROW
+EXECUTE PROCEDURE fn_backup_fired_employees();

@@ -128,3 +128,6 @@ LANGUAGE plpgsql
 -- Usage of stored procedures
 
 CALL sp_add_person('Ivan', 'Nachev', 'Varna')
+
+
+-- TRANSACTION
