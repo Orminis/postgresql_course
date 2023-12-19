@@ -1,0 +1,28 @@
+CREATE OR REPLACE FUNCTION fn_full_name(first_name VARCHAR, last_name VARCHAR)
+RETURNS VARCHAR
+AS
+$$
+	DECLARE
+		full_name VARCHAR;
+	BEGIN
+		IF 
+			first_name IS NULL AND last_name IS null THEN
+				RETURN null;
+		ELSEIF 
+			first_name IS NULL THEN
+				RETURN last_name;
+		ELSEIF 
+			last_name IS NULL THEN
+				RETURN first_name;
+		ELSE
+			full_name := CONCAT(INITCAP(first_name), ' ', INITCAP(last_name));
+			RETURN full_name;
+		END IF;
+	END;
+$$
+LANGUAGE plpgsql
+;
+SELECT fn_full_name('fred', 'sanford');
+SELECT fn_full_name('', 'SIMPSONS');
+SELECT fn_full_name('JOHN', '');
+SELECT fn_full_name(NULL, NULL);
