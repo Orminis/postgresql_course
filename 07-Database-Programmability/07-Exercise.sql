@@ -52,3 +52,32 @@ SELECT fn_calculate_future_value (1000, 0.1, 5);
 SELECT fn_calculate_future_value (2500, 0.30, 2);
 SELECT fn_calculate_future_value (500, 0.25, 10);
 SELECT fn_calculate_future_value (1400, 0.15, 5);
+
+
+-- 03.User-defined Function Is Word Comprised
+
+-- DROP FUNCTION fn_is_word_comprised;
+
+CREATE OR REPLACE FUNCTION fn_is_word_comprised(
+	set_of_letters VARCHAR(50)
+	,word VARCHAR(50)
+	)
+RETURNS BOOLEAN
+AS
+$$		
+	BEGIN
+		RETURN TRIM(LOWER(word), LOWER(set_of_letters)) = '';
+	END;
+$$
+LANGUAGE plpgsql
+;
+
+SELECT fn_is_word_comprised('ois tmiah%f', 'halves');
+SELECT fn_is_word_comprised('ois tmiah%f', 'Sofia');
+SELECT fn_is_word_comprised('bobr', 'Rob');
+SELECT fn_is_word_comprised('papopep', 'toe');
+SELECT fn_is_word_comprised('R@o!B$B', 'Bob');
+
+-- 0
+
+
