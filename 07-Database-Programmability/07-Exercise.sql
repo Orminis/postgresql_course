@@ -72,12 +72,92 @@ $$
 LANGUAGE plpgsql
 ;
 
+
+-- With For loop
+CREATE OR REPLACE FUNCTION fn_is_word_comprised(
+	set_of_letters VARCHAR(50)
+	,word VARCHAR(50)
+	)
+RETURNS BOOLEAN
+AS
+$$	
+	DECLARE
+		i INT;
+		letter VARCHAR;
+	BEGIN
+		FOR i IN 1..length(word) LOOP
+			letter := substring(lower(word), i, 1);
+			IF position(letter IN lower(set_of_letters)) = 0 THEN
+				RETURN FALSE;
+			END IF;
+		END LOOP;
+		
+		RETURN TRUE;
+	END;
+$$
+LANGUAGE plpgsql
+;
+
 SELECT fn_is_word_comprised('ois tmiah%f', 'halves');
 SELECT fn_is_word_comprised('ois tmiah%f', 'Sofia');
 SELECT fn_is_word_comprised('bobr', 'Rob');
 SELECT fn_is_word_comprised('papopep', 'toe');
 SELECT fn_is_word_comprised('R@o!B$B', 'Bob');
 
--- 0
+-- 04.Game Over
+
+CREATE OR REPLACE FUNCTION fn_is_game_over(is_game_over BOOLEAN)
+RETURNS TABLE(
+	"name" VARCHAR(50)
+	,game_type_id INT
+	,is_finished BOOLEAN
+	)
+AS
+$$
+	BEGIN
+		RETURN QUERY
+		SELECT 
+			g.name
+			,g.game_type_id
+			,g.is_finished
+		FROM games as g
+		WHERE g.is_finished = is_game_over;
+	END;
+$$
+LANGUAGE plpgsql
+;
 
 
+-- 05. Difficulty Level
+
+
+CREATE OR REPLACE FUNCTION fn_difficulty_level(level INT)
+RETURNS VARCHAR(50)
+AS
+$$
+	DECLARE
+		dif_level VARCHAR(50);
+	BEGIN
+		IF (level <= 40) THEN
+			dif_level := 'Normal Difficulty';
+		ELSEIF (level > 40) AND (level <= 60) THEN
+			dif_level := 'Nightmare Difficulty';
+		ElSEIF (level > 60) THEN
+			dif_level := 'Hell Difficulty';
+		END IF;
+		RETURN dif_level;
+	END;
+$$
+LANGUAGE plpgsql
+;
+
+SELECT 
+	ug.user_id
+	,ug.level
+	,ug.cash
+	,fn_difficulty_level(ug.level)
+
+FROM 
+	users_games AS ug
+
+ORDER BY ug.user_id
