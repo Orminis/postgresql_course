@@ -378,6 +378,8 @@ BEGIN
 		,'On ' || DATE() || 'your balance was changed from '|| NEW.old_sum || 'to' || NEW.new_sum || '.'
 		
  	);
+	
+	RETURN NEW;
 END;
 $$
 LANGUAGE plpgsql;
