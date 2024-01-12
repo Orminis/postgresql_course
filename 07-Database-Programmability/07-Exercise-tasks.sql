@@ -1,458 +1,389 @@
--- 01.Booked for Nights
-SELECT 
-	CONCAT(a.address, ' ', a.address_2) AS "apartment_address"
-	,b.booked_for AS "nights"
-FROM 
-	apartments AS a
-JOIN 
-	bookings AS b
-ON 
-	a.booking_id = b.booking_id
-ORDER BY 
-	a.apartment_id ASC
-;
+-- 01.User-defined Function Full Name
 
--- 02.First 10 Apartments Booked At
-SELECT 
-	a.name
-	,a.country
-	,b.booked_at::date
-FROM
-	apartments AS a
-LEFT JOIN
-	bookings AS b
-ON
-	a.booking_id = b.booking_id
-LIMIT(10)
-;
-
--- 03.First 10 Customers with Bookings
-SELECT 
-	b.booking_id
-	,b.starts_at::date
-	,b.apartment_id
-	,CONCAT(c.first_name, ' ', c.last_name) AS customer_name
-FROM
-	bookings AS b
-RIGHT JOIN
-	customers AS c
-ON
-	b.customer_id = c.customer_id
-ORDER BY 
-	customer_name
-LIMIT(10)
-;
-
--- 04.Booking Information 
-SELECT 
-	b.booking_id
-	,a.name AS apartment_owner
-	,a.apartment_id
-	,CONCAT(c.first_name, ' ', c.last_name) AS customer_name
-FROM 
-	apartments AS a
-FULL JOIN 
-	bookings AS b
-ON 
-	a.booking_id = b.booking_id
-FULL JOIN 
-	customers AS c
-ON 
-	b.customer_id = c.customer_id
-ORDER BY
-	b.booking_id ASC
-	,apartment_owner ASC
-	,customer_name ASC
-;
-
--- 05. Multiplication of Information
-SELECT 
-	b.booking_id
-	,c.first_name AS customer_name
-FROM 
-	bookings AS b
-CROSS JOIN
-	customers AS c
-ORDER BY
-	customer_name ASC
-;
-
--- 06. Unassigned Apartments
-SELECT 
-	b.booking_id
-	,b.apartment_id
-	,c.companion_full_name 
-FROM 
-	bookings AS b
-JOIN
-	customers AS c
-ON 
-	b.customer_id = c.customer_id
-WHERE 
-	b.apartment_id is Null
-;
-
--- 07. Bookings Made by Lead
-SELECT 
-	b.apartment_id
-	,b.booked_for
-	,c.first_name
-	,c.country 
-FROM 
-	bookings AS b
-INNER JOIN
-	customers AS c
-ON 
-	b.customer_id = c.customer_id
-WHERE
-	c.job_type = 'Lead'
-;
-
--- 08. Hahn's Bookings
-SELECT 
-	COUNT(*)
-FROM 
-	bookings AS b
-JOIN
-	customers AS c
-ON 
-	b.customer_id = c.customer_id
-WHERE
-	c.last_name = 'Hahn'
-;
-
--- 09. Total Sum of Nights
-SELECT 
-	a.name
-	,SUM(b.booked_for)
-FROM 
-	apartments AS a
-JOIN
-	bookings AS b
-ON
-	a.apartment_id = b.apartment_id
-GROUP BY
-	a.name
-ORDER BY 
-	a.name ASC
-;
-
--- 10. Popular Vacation Destination
-SELECT 
-	a.country
-	,count(b.booking_id) AS "booking_count"
-FROM
-	apartments AS a
-JOIN
-	bookings AS b
-ON 
-	a.apartment_id = b.apartment_id
-WHERE
-	 b.booked_at > '2021-05-18 07:52:09.904+03' 
-	 and 
-	 b.booked_at < '2021-09-17 19:48:02.147+03' 
-GROUP BY
-	a.country
-ORDER BY
-	"booking_count" DESC
-;
-
--- 11. Bulgaria's Peaks Higher than 2835 Meters 
-SELECT
-	mc.country_code
-	,m.mountain_range
-	,p.peak_name
-	,p.elevation
-FROM
-	mountains AS m
-JOIN 
-	mountains_countries AS mc
-ON
-	m.id = mc.mountain_id
-JOIN
-	peaks AS p
-ON
-	m.id = p.mountain_id
-WHERE
-	mc.country_code = 'BG'
-	AND
-	p.elevation > 2835
-ORDER BY
-	p.elevation DESC
-;
-
--- 12. Count Mountain Ranges
-SELECT
-	mc.country_code
-	,COUNT(m.mountain_range) AS "mountain_range_count"
-FROM
-	mountains AS m
-JOIN 
-	mountains_countries AS mc
-ON
-	m.id = mc.mountain_id
-WHERE
-	mc.country_code in ('BG', 'RU', 'US')
-GROUP BY
-	mc.country_code
-ORDER BY 
-	"mountain_range_count" DESC
-;
-
--- 13. Rivers in Africa
-SELECT
-	c.country_name
-	,r.river_name
-FROM
-	countries AS c
-LEFT JOIN
-	countries_rivers AS cr
-ON 
-	c.country_code = cr.country_code
-LEFT JOIN
-	rivers AS r
-ON 
-	cr.river_id = r.id
-WHERE 
-	continent_code = 'AF'
-ORDER BY
-	c.country_name
-LIMIT 5
-;
-
--- 14. Minimum Average Area Across Continents
-SELECT
-	AVG(area_in_sq_km) AS average_area
-FROM
-	countries
-GROUP BY
-	continent_code
-ORDER BY
-	average_area
-LIMIT(1)
-;
-
-SELECT
-	MIN(average_area_in_sq_km)
-FROM (
-	SELECT
-		AVG(area_in_sq_km) AS average_area_in_sq_km
-	FROM
-		countries
-	GROUP BY
-		continent_code
-) AS min_average_area
-;
-
--- 15. Countries Without Any Mountains
-SELECT 
-	COUNT(*) AS "countries_without_mountains"	 
-FROM 
-	countries AS c
-LEFT JOIN
-	mountains_countries AS mc
-ON
-	c.country_code = mc.country_code
-WHERE
-	mc.mountain_id is Null
-;
-
--- 16. Monasteries by Country
-CREATE TABLE IF NOT EXISTS 
-	monasteries(
-		id SERIAL PRIMARY KEY
-		,monastery_name VARCHAR(255)
-		,country_code CHAR(2)
-	)
-;
-
-INSERT INTO
-	monasteries(monastery_name, country_code)
-VALUES
-	('Rila Monastery "St. Ivan of Rila"', 'BG'),
-	('Bachkovo Monastery "Virgin Mary"', 'BG'),
-	('Troyan Monastery "Holy Mother''s Assumption"', 'BG'),
-	('Kopan Monastery', 'NP'),
-	('Thrangu Tashi Yangtse Monastery', 'NP'),
-	('Shechen Tennyi Dargyeling Monastery', 'NP'),
-	('Benchen Monastery', 'NP'),
-	('Southern Shaolin Monastery', 'CN'),
-	('Dabei Monastery', 'CN'),
-	('Wa Sau Toi', 'CN'),
-	('Lhunshigyia Monastery', 'CN'),
-	('Rakya Monastery', 'CN'),
-	('Monasteries of Meteora', 'GR'),
-	('The Holy Monastery of Stavronikita', 'GR'),
-	('Taung Kalat Monastery', 'MM'),
-	('Pa-Auk Forest Monastery', 'MM'),
-	('Taktsang Palphug Monastery', 'BT'),
-	('Sümela Monastery', 'TR')
-;
-
-ALTER TABLE 
-	countries
-ADD COLUMN 
-	three_rivers BOOLEAN 
-DEFAULT FALSE
-;
-
-UPDATE
-	countries
-SET
-	three_rivers = (
-		SELECT 
-			COUNT(*) >= 3
-		FROM 
-			countries_rivers AS cr
-		WHERE
-			cr.country_code = countries.country_code
-	)
-;
-
-SELECT 
-	m.monastery_name
-	,c.country_name
-FROM
-	monasteries AS m
-JOIN 
-	countries AS c
-ON 
-	m.country_code = c.country_code
-WHERE
-	NOT three_rivers
-ORDER BY
-	m.monastery_name ASC
-;
-
-
--- 17
-UPDATE
-	countries
-SET
-	country_name = 'Burma'
-WHERE
-	country_name = 'Myanmar'
-;
-
-INSERT INTO
-	monasteries(monastery_name, country_code)
-VALUES
-	('Hanga Abbey', 'TZ')
-	,('Myin-Tin-Daik', 'MM')
-;
-
-SELECT 
-	cont.continent_name
-	,c.country_name
-	,COUNT(m.monastery_name) AS monastery_count
-FROM
-	continents AS cont
-JOIN
-	countries AS c
-USING
-	(continent_code)
-LEFT JOIN 
-	monasteries AS m
-ON
-	c.country_code = m.country_code
-WHERE
-	NOT c.three_rivers
-GROUP BY 
-	cont.continent_name
-	,c.country_name
-	
-ORDER BY
-	monastery_count DESC
-	,c.country_name ASC
-;
-
--- 18. Retrieving Information about Indexes
-SELECT
-	tablename
-	,indexname
-	,indexdef
-FROM
-	pg_indexes
-WHERE
-	schemaname = 'public'
-ORDER BY
-	tablename ASC
-	,indexname ASC
-;
-
--- 19. * Continents and Currencies
-CREATE VIEW 
-	continent_currency_usage 
+CREATE OR REPLACE FUNCTION fn_full_name(
+	first_name VARCHAR(50)
+	,last_name VARCHAR(50)
+)
+RETURNS VARCHAR(101)
 AS
+$$
+	DECLARE
+		full_name VARCHAR(101);
+	BEGIN
+		IF 
+			first_name IS NULL AND last_name IS null THEN
+				RETURN null;
+		ELSEIF 
+			first_name IS NULL THEN
+				RETURN last_name;
+		ELSEIF 
+			last_name IS NULL THEN
+				RETURN first_name;
+		ELSE
+			full_name := CONCAT(INITCAP(first_name), ' ', INITCAP(last_name));
+			RETURN full_name;
+		END IF;
+	END;
+$$
+LANGUAGE plpgsql
+;
+SELECT fn_full_name('fred', 'sanford');
+SELECT fn_full_name('', 'SIMPSONS');
+SELECT fn_full_name('JOHN', '');
+SELECT fn_full_name(NULL, NULL);
 
-SELECT
-	final_table.continent_code
-	,final_table.currency_code
-	,final_table.currency_usage
 
-FROM
-(
-	SELECT 
-		counted_table.continent_code
-		,counted_table.currency_code
-		,counted_table.currency_usage
-		,DENSE_RANK() OVER (PARTITION BY counted_table.continent_code ORDER BY counted_table.currency_usage DESC) AS "dense_rank"
-	
-	FROM (
-		SELECT
-			continent_code
-			,currency_code
-			,count(currency_code) as currency_usage
-		FROM 
-			countries	
-		GROUP BY
-			continent_code
-			,currency_code
-		HAVING
-			COUNT(*) > 1
-		) AS counted_table
-
-) AS final_table
-
-WHERE 
-	final_table.dense_rank = 1
-ORDER BY 
-	final_table.currency_usage DESC
+-- Second variant
+CREATE OR REPLACE FUNCTION fn_full_name(
+	first_name VARCHAR(50)
+	,last_name VARCHAR(50)
+)
+RETURNS VARCHAR(101)
+AS
+$$
+	DECLARE
+		full_name VARCHAR(101);
+	BEGIN
+		full_name := CONCAT(INITCAP(first_name), ' ', INITCAP(last_name));
+		RETURN full_name;
+	END;
+$$
+LANGUAGE plpgsql
 ;
 
--- 20
-WITH 
-	"row_number" as(
-		SELECT
-			c.country_name
-			,COALESCE(p.peak_name, '(no highest peak)') as highest_peak_name
-			,COALESCE(p.elevation, 0) AS highest_peak_elevation
-			,COALESCE(m.mountain_range, '(no mountain)') as mountain
-			,ROW_NUMBER() OVER (PARTITION BY c.country_name ORDER BY p.elevation DESC) AS row_nums
+-- 02.User-defined Function Future Value
+
+DROP FUNCTION fn_calculate_future_value;
+
+CREATE OR REPLACE FUNCTION fn_calculate_future_value(
+	initial_sum DECIMAL
+	, yearly_interest_rate DECIMAL
+	, number_of_years INT)
+RETURNS DECIMAL
+AS
+$$
+	DECLARE
+		future_value DECIMAL;
+	BEGIN
+		future_value := initial_sum * (POWER((1 + yearly_interest_rate), number_of_years));
+		RETURN TRUNC(future_value, 4);
+	END;
+$$
+LANGUAGE plpgsql
+;
+SELECT fn_calculate_future_value (1000, 0.1, 5);
+SELECT fn_calculate_future_value (2500, 0.30, 2);
+SELECT fn_calculate_future_value (500, 0.25, 10);
+SELECT fn_calculate_future_value (1400, 0.15, 5);
 
 
-		FROM
-			countries AS c
-		
-		LEFT JOIN mountains_countries as mc
-			ON c.country_code = mc.country_code
-		
-		LEFT JOIN peaks as p
-			ON mc.mountain_id = p.mountain_id
-		
-		LEFT JOIN mountains as m
-			on m.id = p.mountain_id
+-- 03.User-defined Function Is Word Comprised
+
+-- DROP FUNCTION fn_is_word_comprised;
+
+CREATE OR REPLACE FUNCTION fn_is_word_comprised(
+	set_of_letters VARCHAR(50)
+	,word VARCHAR(50)
 	)
-SELECT
-	country_name
-	,highest_peak_name
-	,highest_peak_elevation
-	,mountain
-FROM 
-	"row_number"
-WHERE 
-	row_nums = 1
-ORDER BY
-	country_name ASC
-	,highest_peak_elevation DESC
+RETURNS BOOLEAN
+AS
+$$		
+	BEGIN
+		RETURN TRIM(LOWER(word), LOWER(set_of_letters)) = '';
+	END;
+$$
+LANGUAGE plpgsql
 ;
+
+
+-- With For loop
+CREATE OR REPLACE FUNCTION fn_is_word_comprised(
+	set_of_letters VARCHAR(50)
+	,word VARCHAR(50)
+	)
+RETURNS BOOLEAN
+AS
+$$	
+	DECLARE
+		i INT;
+		letter VARCHAR;
+	BEGIN
+		FOR i IN 1..length(word) LOOP
+			letter := substring(lower(word), i, 1);
+			IF position(letter IN lower(set_of_letters)) = 0 THEN
+				RETURN FALSE;
+			END IF;
+		END LOOP;
+		
+		RETURN TRUE;
+	END;
+$$
+LANGUAGE plpgsql
+;
+
+SELECT fn_is_word_comprised('ois tmiah%f', 'halves');
+SELECT fn_is_word_comprised('ois tmiah%f', 'Sofia');
+SELECT fn_is_word_comprised('bobr', 'Rob');
+SELECT fn_is_word_comprised('papopep', 'toe');
+SELECT fn_is_word_comprised('R@o!B$B', 'Bob');
+
+-- 04.Game Over
+
+CREATE OR REPLACE FUNCTION fn_is_game_over(is_game_over BOOLEAN)
+RETURNS TABLE(
+	"name" VARCHAR(50)
+	,game_type_id INT
+	,is_finished BOOLEAN
+	)
+AS
+$$
+	BEGIN
+		RETURN QUERY
+		SELECT 
+			g.name
+			,g.game_type_id
+			,g.is_finished
+		FROM games as g
+		WHERE g.is_finished = is_game_over;
+	END;
+$$
+LANGUAGE plpgsql
+;
+
+
+-- 05. Difficulty Level
+
+
+CREATE OR REPLACE FUNCTION fn_difficulty_level(level INT)
+RETURNS VARCHAR(50)
+AS
+$$
+	DECLARE
+		dif_level VARCHAR(50);
+	BEGIN
+		IF (level <= 40) THEN
+			dif_level := 'Normal Difficulty';
+		ELSEIF (level > 40) AND (level <= 60) THEN
+			dif_level := 'Nightmare Difficulty';
+		ElSEIF (level > 60) THEN
+			dif_level := 'Hell Difficulty';
+		END IF;
+		RETURN dif_level;
+	END;
+$$
+LANGUAGE plpgsql
+;
+
+SELECT 
+	ug.user_id
+	,ug.level
+	,ug.cash
+	,fn_difficulty_level(ug.level)
+
+FROM 
+	users_games AS ug
+
+ORDER BY ug.user_id
+
+-- 06. * Cash in User Games Odd Rows
+
+CREATE OR REPLACE FUNCTION fn_cash_in_users_games (
+	game_name VARCHAR(50)	
+)
+RETURNS TABLE (
+	total_cash NUMERIC
+)
+AS
+$$
+	BEGIN
+		RETURN QUERY
+		WITH ranked_games AS (
+			SELECT
+				cash
+				,ROW_NUMBER() OVER 
+					(ORDER BY cash DESC) AS row_num
+			FROM 
+				users_games AS ug
+			JOIN
+				games AS g
+			ON 
+				ug.game_id = g.id
+			WHERE 
+				g.name = game_name
+		)
+		
+		SELECT
+			ROUND(SUM(cash), 2) AS total_cash
+		FROM 
+			ranked_games 
+		WHERE 
+			row_num % 2 <> 0;
+	END;
+$$
+LANGUAGE plpgsql
+;
+
+SELECT * FROM fn_cash_in_users_games('Love in a mist');
+SELECT * FROM fn_cash_in_users_games('Delphinium Pacific Giant');
+
+-- 07. Retrieving Account Holders
+CREATE PROCEDURE sp_retrieving_holders_with_balance_higher_than(
+	searched_balance NUMERIC
+)
+AS
+$$
+	DECLARE
+		holder_info RECORD;
+	BEGIN
+		FOR holder_info IN 
+			SELECT 
+				CONCAT(ah.first_name, ' ', ah.last_name) AS full_name
+				,SUM(balance) AS total_balance
+			FROM 
+				account_holders AS ah
+			JOIN
+				accounts AS a
+			ON 
+				ah.id = a.account_holder_id
+			GROUP BY
+				full_name
+			HAVING 
+				SUM(balance) > searched_balance
+			ORDER BY 
+				full_name ASC
+		LOOP
+			RAISE NOTICE '% - %', holder_info.full_name, holder_info.total_balance;
+		END LOOP;	
+	END
+$$
+LANGUAGE plpgsql;
+
+CALL sp_retrieving_holders_with_balance_higher_than(250000);
+
+-- 08. Deposit Money
+
+CREATE OR REPLACE PROCEDURE sp_deposit_money(
+	account_id INT
+	,amount_money NUMERIC(10, 4)
+)
+AS 
+$$
+	BEGIN
+		UPDATE accounts
+		SET balance = balance + amount_money
+		WHERE id = account_id ;
+		
+		-- COMMIT
+	END;
+$$
+LANGUAGE plpgsql;
+
+-- 
+
+SELECT 
+	account_holder_id
+	,balance
+FROM accounts
+	WHERE account_holder_id = 2
+ORDER BY 
+	account_holder_id ASC;
+
+CALL sp_deposit_money(1, 200);
+CALL sp_deposit_money(2, 500);
+CALL sp_deposit_money(4, 1000);
+
+-- 09. Withdraw Money
+CREATE OR REPLACE PROCEDURE sp_transfer_money(
+	sender_id INT
+	,receiver_id INT
+	,amount NUMERIC
+)
+AS 
+$$
+DECLARE 
+	current_balance NUMERIC;
+BEGIN
+	CALL sp_withdraw_money(sender_id, amount);
+	CALL sp_deposit_money(receiver_id, amount);
+	
+	SELECT balance INTO current_balance FROM accounts WHERE id = sender_id;
+	
+	IF current_balance < 0 THEN
+		ROLLBACK;
+	END IF;
+END
+$$
+LANGUAGE plpgsql;
+
+CALL sp_transfer_money(5, 1, 5000.0000)
+;
+SELECT * FROM accounts
+
+-- 11. Drop Procedure
+
+DROP PROCEDURE sp_retrieving_holders_with_balance_higher_than
+
+-- 12. Log Accounts Trigger
+
+CREATE TABLE logs(
+	id SERIAL PRIMARY KEY
+	,account_id INT
+	,old_sum NUMERIC(20, 4)
+	,new_sum NUMERIC(20, 4)
+);
+
+CREATE OR REPLACE FUNCTION trigger_fn_insert_new_entry_into_logs()
+RETURNS TRIGGER AS
+$$
+BEGIN
+	INSERT INTO 
+		logs(account_id, old_sum, new_sum)
+	VALUES(OLD.id, OLD.balance, NEW.balance);
+	
+	RETURN NEW;
+END
+$$
+
+LANGUAGE plpgsql;
+
+CREATE TRIGGER
+	tr_account_balance_change
+AFTER UPDATE 
+	OF balance ON accounts
+FOR EACH ROW
+WHEN 
+	(NEW.balance <> OLD.balance)
+EXECUTE FUNCTION 
+	trigger_fn_insert_new_entry_into_logs();
+	
+	
+-- 13. Notification Email on Balance Change
+CREATE TABLE notification_emails(
+	"id" SERIAL PRIMARY KEY
+	,"recipient_id" INT
+	,"subject" VARCHAR(255)
+	,"body" TEXT
+);
+
+CREATE OR REPLACE FUNCTION
+	trigger_fn_send_email_on_balance_change()
+RETURNS TRIGGER AS
+$$
+BEGIN
+	INSERT INTO
+		notification_emails(recipient_id, subject, body)
+	VALUES(
+		NEW.account_id 
+		,'Balance Change for account: ' || NEW.account_id
+		,'On ' || DATE() || 'your balance was changed from '|| NEW.old_sum || 'to' || NEW.new_sum || '.'
+		
+ 	);
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER tr_send_email_on_balance_change
+AFTER UPDATE ON logs
+FOR EACH ROW 
+WHEN (OLD.new_sum <> NEW.new_sum)
+EXECUTE FUNCTION trigger_fn_send_email_on_balance_change();

@@ -1,0 +1,119 @@
+[33mcommit c46f88286f62c8e369ccfc7e63153d6509ef9faa[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31mpostgresql_course/master[m[33m)[m
+Author: Orminis <k.nedialkov@gmail.com>
+Date:   Thu Dec 21 23:34:05 2023 +0200
+
+    Database Programmability Exercise
+
+[33mcommit 6f0b9acd1603969815bfb8e14920f3d5c0566420[m
+Author: Orminis <k.nedialkov@gmail.com>
+Date:   Tue Dec 19 23:46:31 2023 +0200
+
+    Database Programmability Exercise Tasks
+
+[33mcommit b1dbd2891c5d06a8ad9bb955341077957a852f53[m
+Author: Orminis <k.nedialkov@gmail.com>
+Date:   Tue Dec 19 21:11:38 2023 +0200
+
+    Database Programmability Exercise Tasks
+
+[33mcommit 086a1a47983fc73ffde308a55349045681ed56ec[m
+Author: Orminis <k.nedialkov@gmail.com>
+Date:   Tue Dec 19 00:58:39 2023 +0200
+
+    Database Programmability
+
+[33mcommit 199bd8ee84a5c04f850e71d2dbb71b59d0cc8de2[m
+Author: Orminis <k.nedialkov@gmail.com>
+Date:   Fri Dec 15 23:08:09 2023 +0200
+
+    Database Programmability and Transactions Lab
+
+[33mcommit 74ff0b3ec115ca9648c4c77486050e1200295b8a[m
+Author: Orminis <k.nedialkov@gmail.com>
+Date:   Thu Dec 14 23:54:28 2023 +0200
+
+    update
+
+[33mcommit d2eaf04c6d44972757ecf66a280cb95a6d790aba[m
+Author: Orminis <k.nedialkov@gmail.com>
+Date:   Thu Dec 14 23:07:13 2023 +0200
+
+    Functions in PostgreSQL
+
+[33mcommit 42abe96e6b451477ea4426d2ea33fa58d50d8743[m
+Author: Orminis <k.nedialkov@gmail.com>
+Date:   Wed Dec 13 23:58:13 2023 +0200
+
+    Task 20 from Joins and Subqueries Exercise
+
+[33mcommit 586e3ded1d7486e8f0742f1545ad4029ee6af3d0[m
+Author: Orminis <k.nedialkov@gmail.com>
+Date:   Wed Dec 13 21:30:43 2023 +0200
+
+    Joins, subqueries and indices: Task 19
+
+[33mcommit 19a4f936ee8cfd24b5fd694c374423e04a6729c2[m
+Author: Orminis <k.nedialkov@gmail.com>
+Date:   Sun Dec 10 00:44:18 2023 +0200
+
+    Joins, subqueries and indices Exercise
+
+[33mcommit 05449e53538b4e9d1938acaf6070305685b3b1fe[m
+Author: Orminis <k.nedialkov@gmail.com>
+Date:   Sat Dec 9 23:31:42 2023 +0200
+
+    Joins, subqueries and indices Exercise
+
+[33mcommit 84529557c496b1812ddcc2181a55302f3308789a[m
+Author: Orminis <k.nedialkov@gmail.com>
+Date:   Thu Dec 7 22:11:39 2023 +0200
+
+    Joins and subqueries
+
+[33mcommit c2b1886c8b9343840959cf0a5cba600e2fca1032[m
+Author: Orminis <k.nedialkov@gmail.com>
+Date:   Wed Nov 29 23:11:09 2023 +0200
+
+    Table Relations Exercise
+
+[33mcommit 1a13a39779ca228600e632bba75f8f28c1b3f6c8[m[33m ([m[1;31mpostgresql_course/test-branch[m[33m, [m[1;32mtest-branch[m[33m)[m
+Author: Orminis <k.nedialkov@gmail.com>
+Date:   Tue Nov 28 22:24:26 2023 +0200
+
+    Table Relations
+
+[33mcommit b0aab61c089cd8901d86e0b3c09b102a5a32d5e8[m
+Author: Orminis <k.nedialkov@gmail.com>
+Date:   Tue Nov 28 01:03:40 2023 +0200
+
+    Aggregation functions Exercise
+
+[33mcommit 5dcb4b5c04fed427eaa20890b5bc2955350a3a7c[m
+Author: Orminis <k.nedialkov@gmail.com>
+Date:   Mon Nov 27 01:00:29 2023 +0200
+
+    Data Agregation Exercise task
+
+[33mcommit cfa1ac01af54399809cd8dadbddbdf5c2a25395b[m
+Author: Orminis <k.nedialkov@gmail.com>
+Date:   Mon Nov 27 00:59:44 2023 +0200
+
+    Data Agregation Exercise task
+
+[33mcommit a3df64c8c9de6a873479d231b8f71d536b650d3a[m
+Author: Orminis <k.nedialkov@gmail.com>
+Date:   Sun Nov 26 23:49:48 2023 +0200
+
+    Data Aggregation Exercise task
+
+[33mcommit bd2ea0b1bc81944aceeae58be4e617cc48989c44[m
+Author: Orminis <k.nedialkov@gmail.com>
+Date:   Thu Nov 23 20:55:37 2023 +0200
+
+    Data aggregation Lecture
+
+[33mcommit ef99ee6ba1d347e8630ccefc1ca84512c8e8ab44[m
+Author: Orminis <k.nedialkov@gmail.com>
+Date:   Wed Nov 22 22:49:04 2023 +0200
+
+    Started PostgreSQL course
